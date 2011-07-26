@@ -29,7 +29,7 @@ namespace GitHubUploader.Core
 			_s3Uploader = s3Uploader;
 		}
 
-		public IEnumerable<FileInfo> ListFiles(string repository)
+		public IEnumerable<string> ListFiles(string repository)
 		{
 			repository = QualifyRepositoryName(repository);
 
@@ -40,7 +40,7 @@ namespace GitHubUploader.Core
 			return ParseHtmlForFiles(response.Content);
 		}
 
-		public IEnumerable<FileInfo> ParseHtmlForFiles(string html)
+		public IEnumerable<string> ParseHtmlForFiles(string html)
 		{
 			var doc = new HtmlDocument();
 
@@ -58,17 +58,24 @@ namespace GitHubUploader.Core
 			{
 				HtmlNode descriptionNode = li.SelectNodes("descendant::h4").First();
 
-				string description = string.Join("", descriptionNode.ChildNodes.Where(n => n.Name != "a").Select(n => n.InnerText).ToArray()).Replace("—", "").Trim();
-				string date = li.SelectNodes("descendant::p/abbr").First().Attributes["title"].Value;
-				string size = li.SelectNodes("descendant::p/strong").First().InnerText;
-				string id = idRegex.Match(li.SelectNodes("a").First().Attributes["href"].Value).Value;
+			    var name = descriptionNode.ChildNodes.Where(n => n.Name == "a").Select(n => n.InnerText).First();
 
-				HtmlNode anchor = li.SelectNodes("descendant::h4/a").First();
+                //var strings = enumerable.ToArray();
 
-				string link = anchor.Attributes["href"].Value;
-				string name = anchor.InnerText;
+                //var @join = string.Join("", strings);
 
-				yield return new FileInfo {Date = DateTime.Parse(date), Description = description, Id = id, Link = link, Name = name, Size = size};
+                //string description = @join.Replace("—", "").Trim();
+
+                //string date = li.SelectNodes("descendant::p/abbr").First().Attributes["title"].Value;
+                //string size = li.SelectNodes("descendant::p/strong").First().InnerText;
+                //string id = idRegex.Match(li.SelectNodes("a").First().Attributes["href"].Value).Value;
+
+                //HtmlNode anchor = li.SelectNodes("descendant::h4/a").First();
+
+                //string link = anchor.Attributes["href"].Value;
+                //string name = anchor.InnerText;
+
+			    yield return name;
 			}
 		}
 
@@ -103,18 +110,18 @@ namespace GitHubUploader.Core
 
 			if (info.Replace)
 			{
-				IEnumerable<FileInfo> filesToDelete = ListFiles(info.Repository).Where(f => f.Name.Equals(info.Name));
+                //IEnumerable<FileInfo> filesToDelete = ListFiles(info.Repository).Where(f => f.Name.Equals(info.Name));
 
-				foreach (FileInfo file in filesToDelete)
-				{
-					Delete(info.Repository, file.Id);
-				}
+                //foreach (FileInfo file in filesToDelete)
+                //{
+                //    Delete(info.Repository, file.Id);
+                //}
 			}
 			else
 			{
 				var files = ListFiles(info.Repository);
 
-				if (files.Any(f => f.Name.EndsWith(info.Name)))
+				if (files.Any(name => name.EndsWith(info.Name)))
 				{
 					throw new InvalidOperationException(string.Format("The file {0} is already uploaded. please try a different name", info.Name));
 				}
@@ -176,10 +183,10 @@ namespace GitHubUploader.Core
 
 			if (string.IsNullOrEmpty(repository)) throw new ArgumentNullException("repository");
 
-			foreach (FileInfo file in ListFiles(repository))
-			{
-				Delete(repository, file.Id);
-			}
+            //foreach (FileInfo file in ListFiles(repository))
+            //{
+            //    Delete(repository, file.Id);
+            //}
 		}
 	}
 }

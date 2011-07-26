@@ -26,17 +26,17 @@ namespace GitHubUploader.Tests
 			Assert.Equal(0, files.Count);
 		}
 
-		[Fact]
-		public void Parse_html_for_files_returns_correct_file_details()
-		{
-			var file = uploader.ParseHtmlForFiles(File.ReadAllText("SampleFileList.html")).First();
+        //[Fact]
+        //public void Parse_html_for_files_returns_correct_file_details()
+        //{
+        //    var file = uploader.ParseHtmlForFiles(File.ReadAllText("SampleFileList.html")).First();
 
-			Assert.Equal("Crystals.JPG", file.Name);
-			Assert.Equal(new DateTime(2011, 02, 28, 14, 29, 59), file.Date);
-			Assert.Equal("test2 - some crystals", file.Description);
-			Assert.Equal("81487", file.Id);
-			Assert.Equal("/downloads/bittercoder/Lob/Crystals.JPG", file.Link);
-			Assert.Equal("87KB", file.Size);
-		}
+        //    Assert.Equal("Crystals.JPG", file.Name);
+        //    Assert.Equal(new DateTime(2011, 02, 28, 14, 29, 59), file.Date);
+        //    Assert.Equal("test2 - some crystals", file.Description);
+        //    Assert.Equal("81487", file.Id);
+        //    Assert.Equal("/downloads/bittercoder/Lob/Crystals.JPG", file.Link);
+        //    Assert.Equal("87KB", file.Size);
+        //}
 	}
 }
